@@ -4,7 +4,7 @@ const options = {
   BASE_URL: 'https://pixabay.com/api/?key=',
   KEY: '30695074-d0d0e1da504e36119503c6783',
   FILTER_URL: '&image_type=photo&orientation=horizontal&safesearch=true',
-  PER_PAGE: '&per_page=40  ',
+  PER_PAGE: '&per_page=4  ',
 };
 export default class ApiService {
   constructor() {

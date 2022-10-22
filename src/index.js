@@ -18,25 +18,31 @@ const galleryRefs = document.querySelector('.gallery');
 const loadMoreBtnRefs = document.querySelector('.load-more');
 const input = document.querySelector('input');
 
-const DELAY = 1000;
+let inputStorage;
 
 formRefs.addEventListener('input', onInput);
-formRefs.addEventListener('submit', _.throttle(onSearch, DELAY));
 
 function onInput(e) {
   e.preventDefault();
-
+  formRefs[1].disabled = false;
+  formRefs.addEventListener('submit', onSearch);
   loadMoreBtn.hide();
   fetchImgApi.images = e.target.value;
   galleryRefs.innerHTML = '';
   fetchImgApi.resetPage();
+  inputStorage = input.value.trim();
+  console.log(inputStorage);
 }
 
 async function onSearch(e) {
   e.preventDefault();
+  formRefs[1].disabled = true;
   loadMoreBtn.show();
   loadMoreBtn.disabled();
- 
+  // if (e.target[0].value === inputStorage) {
+  //    return}
+  // console.dir(e.target[0].value);
+  // console.log(inputStorage);
   if (input.value.trim().length < 1) {
     loadMoreBtn.hide();
     return Notify.failure(`Enter correct name.`);
