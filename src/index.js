@@ -31,7 +31,6 @@ function onInput(e) {
   galleryRefs.innerHTML = '';
   fetchImgApi.resetPage();
   inputStorage = input.value.trim();
-  console.log(inputStorage);
 }
 
 async function onSearch(e) {
