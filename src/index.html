@@ -1,16 +1,43 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Homework 11</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.10.3/simple-lightbox.css"
+    />
     <link rel="stylesheet" href="./sass/index.scss" />
   </head>
   <body>
-    <p><a href="index.html">Go back</a></p>
-    <ul class="gallery"></ul>
+    <div class="wrapper">
+      <form>
+        <input 
+          type="text" 
+          name="searchQuery"
+          autocomplete="off"
+          placeholder="Look for...">
+        <button class="btn" type="submit"></button>
+      </form>
+    </div>
+    <div class="gallery">
+      
+    </div>
+    <div class="container">
+      <button 
+      type="button" 
+      class="load-more"
+      data-action="load-more"
+      hidden = "true">
+        <span class="spinner"></span>
+        <span class="label"></span>
+    </button>
+    </div>
+    
     <!-- ❗️❗️❗️ Add partials like so for every page -->
-    <include src="./partials/example.html"></include>
+    <!-- <include src="./partials/example.html"></include> -->
     <script type="module" src="./index.js"></script>
   </body>
 </html>
