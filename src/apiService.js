@@ -4,7 +4,7 @@ const options = {
   BASE_URL: 'https://pixabay.com/api/?key=',
   KEY: '30695074-d0d0e1da504e36119503c6783',
   FILTER_URL: '&image_type=photo&orientation=horizontal&safesearch=true',
-  PER_PAGE: '&per_page=4  ',
+  // per_page: '40',
 };
 export default class ApiService {
   constructor() {
@@ -13,13 +13,15 @@ export default class ApiService {
     this.totalPage = null;
   }
 
-  async fetchImg() {
+  async fetchImg(per_page) {
     const response = await axios.get(
       `${options.BASE_URL}${options.KEY}&q=${this.searchImages.trim()}${
         options.FILTER_URL
-      }${options.PER_PAGE}&page=${this.page}`
+      }&per_page=${per_page}&page=${this.page}`
     );
-    this.totalPage = Math.round(response.data.total / response.data.hits.length);
+    this.totalPage = Math.round(
+      response.data.total / response.data.hits.length
+    );
     return response.data;
   }
 
