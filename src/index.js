@@ -56,7 +56,7 @@ async function onSearch(e) {
       throw Error;
     }
     markupItem(getImages.hits);
-    
+
     Notify.success(`Hooray! We found ${getImages.total} images.`);
 
     loadMoreBtn.show();
@@ -66,8 +66,6 @@ async function onSearch(e) {
       loadMoreBtn.hide();
     }
     fetchImgApi.incrementPage();
-   
-   
   } catch (error) {
     return Notify.failure(
       `Sorry, there are no images matching your search query. Please try again.`
@@ -79,27 +77,28 @@ async function onSearch(e) {
 async function onLoadMore(e) {
   // e.preventDefault();
   loadMoreBtn.disabled();
-try {
-  const newPageImg = await fetchImgApi.fetchImg(PER_PAGE);
-  markupItem(newPageImg.hits);
-const { height: cardHeight } = document
-  .querySelector('.gallery')
-  .firstElementChild.getBoundingClientRect();
+  try {
+    const newPageImg = await fetchImgApi.fetchImg(PER_PAGE);
+    markupItem(newPageImg.hits);
 
-window.scrollBy({
-  top: cardHeight * 2,
-  behavior: 'smooth',
-});
+    
 
-loadMoreBtn.enable();
-console.log(fetchImgApi.page);
-console.log(fetchImgApi.totalPage);
-if (fetchImgApi.page === fetchImgApi.totalPage) {
-  loadMoreBtn.hide();
-}
-fetchImgApi.incrementPage();
-} catch (error) {
-  console.log(error);
-}
-  
+    loadMoreBtn.enable();
+    
+    if (fetchImgApi.page === fetchImgApi.totalPage) {
+      loadMoreBtn.hide();
+    }
+
+    const { height: cardHeight } = document
+      .querySelector('.gallery')
+      .firstElementChild.getBoundingClientRect();
+
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
+    fetchImgApi.incrementPage();
+  } catch (error) {
+    console.log(error);
+  }
 }
