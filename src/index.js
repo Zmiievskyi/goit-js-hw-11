@@ -4,7 +4,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import markupItem from './markup';
 import LoadMoreBtn from './load-more-btn';
 
-const PER_PAGE = '40';
+let PER_PAGE = '40';
 let inputStorage;
 /*
 const optionsForGuard = {
@@ -56,24 +56,18 @@ async function onSearch(e) {
       throw Error;
     }
     markupItem(getImages.hits);
+    
     Notify.success(`Hooray! We found ${getImages.total} images.`);
-
- const { height: cardHeight } = document
-   .querySelector('.gallery')
-   .firstElementChild.getBoundingClientRect();
-
- window.scrollBy({
-   top: cardHeight * -100,
-   behavior: 'smooth',
- });
 
     loadMoreBtn.show();
     loadMoreBtn.enable();
     loadMoreBtnRefs.addEventListener('click', onLoadMore);
-    fetchImgApi.incrementPage();
-    if (fetchImgApi.page > fetchImgApi.totalPage) {
+    if (fetchImgApi.page === fetchImgApi.totalPage) {
       loadMoreBtn.hide();
     }
+    fetchImgApi.incrementPage();
+   
+   
   } catch (error) {
     return Notify.failure(
       `Sorry, there are no images matching your search query. Please try again.`
@@ -82,19 +76,12 @@ async function onSearch(e) {
   //  observer.observe(guard);
 }
 
-function onLoadMore(e) {
+async function onLoadMore(e) {
   // e.preventDefault();
   loadMoreBtn.disabled();
-  if (fetchImgApi.page === fetchImgApi.totalPage) {
-    loadMoreBtn.hide();
-  }
-  fetchImgApi
-    .fetchImg(PER_PAGE)
-    .then(data => {
-      markupItem(data.hits);
-      loadMoreBtn.enable();
-      
-
+try {
+  const newPageImg = await fetchImgApi.fetchImg(PER_PAGE);
+  markupItem(newPageImg.hits);
 const { height: cardHeight } = document
   .querySelector('.gallery')
   .firstElementChild.getBoundingClientRect();
@@ -104,8 +91,15 @@ window.scrollBy({
   behavior: 'smooth',
 });
 
-
-    })
-    .catch(console.log);
-  fetchImgApi.incrementPage();
+loadMoreBtn.enable();
+console.log(fetchImgApi.page);
+console.log(fetchImgApi.totalPage);
+if (fetchImgApi.page === fetchImgApi.totalPage) {
+  loadMoreBtn.hide();
+}
+fetchImgApi.incrementPage();
+} catch (error) {
+  console.log(error);
+}
+  
 }

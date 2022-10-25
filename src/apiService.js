@@ -4,13 +4,14 @@ const options = {
   BASE_URL: 'https://pixabay.com/api/?key=',
   KEY: '30695074-d0d0e1da504e36119503c6783',
   FILTER_URL: '&image_type=photo&orientation=horizontal&safesearch=true',
-  // per_page: '40',
+  per_page: '40',
 };
 export default class ApiService {
   constructor() {
     this.searchImages = '';
     this.page = 1;
-    this.totalPage = null;
+    this.perPage = Number(options.per_page);
+    this.totalPage = 1;
   }
 
   async fetchImg(per_page) {
@@ -19,9 +20,8 @@ export default class ApiService {
         options.FILTER_URL
       }&per_page=${per_page}&page=${this.page}`
     );
-    this.totalPage = Math.round(
-      response.data.total / response.data.hits.length
-    );
+    this.totalPage = Math.ceil(response.data.total / this.perPage);
+    
     return response.data;
   }
 
