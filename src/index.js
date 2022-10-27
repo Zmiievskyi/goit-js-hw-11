@@ -1,11 +1,16 @@
 import _ from 'lodash';
 import ApiService from './apiService';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import markupItem from './markup';
+import { markupItem } from './markup';
 import LoadMoreBtn from './load-more-btn';
 
-let PER_PAGE = '40';
 let inputStorage;
+const options = {
+  BASE_URL: 'https://pixabay.com/api/?key=',
+  KEY: '30695074-d0d0e1da504e36119503c6783',
+  FILTER_URL: '&image_type=photo&orientation=horizontal&safesearch=true',
+  PER_PAGE: '40',
+};
 /*
 const optionsForGuard = {
   root: null,
@@ -14,12 +19,12 @@ const optionsForGuard = {
 };
 const observer = new IntersectionObserver(onLoadMore, optionsForGuard);
 */
-const fetchImgApi = new ApiService();
+const fetchImgApi = new ApiService(options);
 const loadMoreBtn = new LoadMoreBtn({
   selector: '[data-action="load-more"]',
   hidden: true,
 });
-
+console.log(fetchImgApi);
 const formRefs = document.querySelector('form');
 const galleryRefs = document.querySelector('.gallery');
 const loadMoreBtnRefs = document.querySelector('.load-more');
@@ -51,7 +56,7 @@ async function onSearch(e) {
   }
 
   try {
-    const getImages = await fetchImgApi.fetchImg(PER_PAGE);
+    const getImages = await fetchImgApi.fetchImg(fetchImgApi.perPage);
     if (getImages.hits.length < 1) {
       throw Error;
     }
@@ -62,6 +67,7 @@ async function onSearch(e) {
     loadMoreBtn.show();
     loadMoreBtn.enable();
     loadMoreBtnRefs.addEventListener('click', onLoadMore);
+
     if (fetchImgApi.page === fetchImgApi.totalPage) {
       loadMoreBtn.hide();
     }
@@ -75,30 +81,27 @@ async function onSearch(e) {
 }
 
 async function onLoadMore(e) {
-  // e.preventDefault();
   loadMoreBtn.disabled();
   try {
-    const newPageImg = await fetchImgApi.fetchImg(PER_PAGE);
-    markupItem(newPageImg.hits);
-
-    
-
+    const newPageImg = await fetchImgApi.fetchImg();
+    markupItem(newPageImg.hits).then(e => {
+      window.scrollBy(0, window.innerHeight)
+    });
     loadMoreBtn.enable();
-    
     if (fetchImgApi.page === fetchImgApi.totalPage) {
       loadMoreBtn.hide();
     }
-
-    const { height: cardHeight } = document
-      .querySelector('.gallery')
-      .firstElementChild.getBoundingClientRect();
-
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: 'smooth',
-    });
-    fetchImgApi.incrementPage();
   } catch (error) {
     console.log(error);
   }
+   function scroll() {
+     const { height: cardHeight } = document
+       .querySelector('.gallery')
+       .firstElementChild.getBoundingClientRect();
+     window.scrollBy({
+       top: cardHeight * 3,
+       behavior: 'smooth',
+     });
+   }
+   fetchImgApi.incrementPage();
 }

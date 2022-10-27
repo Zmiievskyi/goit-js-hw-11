@@ -4,7 +4,7 @@ import markup from './templates/markup.hbs '
 
 const galleryRefs = document.querySelector('.gallery');
 
-export default function markupItem(response) {
+ const markupItem = async function(response) {
   /*
   const markup = response
     .map(
@@ -37,12 +37,16 @@ export default function markupItem(response) {
     )
     .join('');
 */
-  galleryRefs.insertAdjacentHTML('beforeend', markup(response))
- 
+const list = await markup(response);
+galleryRefs.insertAdjacentHTML('beforeend', list);
+  
   const lightbox = new SimpleLightbox('.gallery a', 
   // {
   //   captionDelay: 250,
   //   captionData: 'alt',
   // }
   );
+   lightbox.refresh();
 }
+
+export { markupItem };
